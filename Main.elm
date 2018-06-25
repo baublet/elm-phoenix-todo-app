@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Attribute, Html, div, h1, input, span, text)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onCheck, onInput)
 
 
 main =
@@ -44,18 +44,32 @@ model =
 
 
 type Msg
-    = Change Int String
+    = TextChange Int String
     | Completed Int Bool
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Change id newContent ->
-            []
+        TextChange id newContent ->
+            List.map
+                (\todo ->
+                    if todo.id == id then
+                        { todo | todo = newContent }
+                    else
+                        todo
+                )
+                model
 
         Completed id completed ->
-            []
+            List.map
+                (\todo ->
+                    if todo.id == id then
+                        { todo | completed = completed }
+                    else
+                        todo
+                )
+                model
 
 
 
@@ -65,7 +79,9 @@ update msg model =
 todoDisplay : Todo -> Html Msg
 todoDisplay todo =
     div []
-        [ input [ value todo.todo ] [] ]
+        [ input [ value todo.todo, onInput (TextChange todo.id) ] []
+        , input [ type_ "checkbox", checked todo.completed, onCheck (Completed todo.id) ] []
+        ]
 
 
 view : Model -> Html Msg
