@@ -108,6 +108,7 @@ update msg model =
         Add ->
             { model
                 | idCounter = model.idCounter + 1
+                , newTodoText = ""
                 , todos =
                     createTodo model.idCounter model.newTodoText :: model.todos
             }
@@ -132,7 +133,7 @@ view model =
         [ h1 [] [ text "Do These Things" ]
         , div [] (List.map todoDisplay model.todos)
         , hr [] []
-        , input [ onInput NewTextChange ]
+        , input [ onInput NewTextChange, value model.newTodoText ]
             []
         , button
             [ onClick Add ]
