@@ -5,7 +5,9 @@ defmodule TodoWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", TodoWeb do
+  scope "/", TodoWeb do
     pipe_through :api
+
+    resources "/", TodoController, except: [:new, :edit]
   end
 end
